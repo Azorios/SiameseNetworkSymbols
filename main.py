@@ -87,12 +87,12 @@ if __name__ == '__main__':
 
     # loss function and optimizer
     loss_fn = ContrastiveLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.00005)
+    optimizer = optim.Adam(model.parameters(), lr=0.0005)
     #scheduler = ReduceLROnPlateau(optimizer, 'min', verbose=True)
 
     # train and save model
     #_ = training(train_loader, val_loader, device, optimizer, model, loss_fn, scheduler)
-    _ = training(train_loader, device, optimizer, model, loss_fn)
+    #_ = training(train_loader, device, optimizer, model, loss_fn)
 
     # testing
     _ = testing(test_loader, model, device)

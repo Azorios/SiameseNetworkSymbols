@@ -32,7 +32,7 @@ def class_counts(data_loader):
         print(f"Class Label: {label}, Count: {count}")
 
 
-def imshow(img, title, text=None):
+def imshow(img, title, text=None, i=None):
     npimg = img.numpy()
     plt.axis("off")
     plt.title(title)
@@ -41,8 +41,8 @@ def imshow(img, title, text=None):
                  bbox={'facecolor': 'white', 'alpha': 0.8, 'pad': 10})
 
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
+    plt.savefig(f'output/dissimilarity{i}.png')
     plt.show()
-
 
 def show_plot(iteration, loss):
     plt.plot(iteration, loss)

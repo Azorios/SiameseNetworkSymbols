@@ -23,8 +23,6 @@ def testing(test_loader, model, device):
         euclidean_distance = F.pairwise_distance(output1, output2)
         imshow(torchvision.utils.make_grid(concatenated),
                f'Class1: {class0[0]}\nClass2: {class1[0]}',
-               f'Dissimilarity: {euclidean_distance.item():.2f}')
-
-        plt.savefig(f"./output/dissimilarity{i}.png")
+               f'Dissimilarity: {euclidean_distance.item():.2f}', i)
 
     return None
