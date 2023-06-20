@@ -21,11 +21,11 @@ class SymbolsDataset(Dataset):
         self.transform = transform
 
     def filter_dataset(self):
-        # Count the number of instances per class (
+        # Count the number of instances per class
         class_counts = self.data.iloc[:, -1].value_counts()
 
         # Filter out classes with less than 7 instances
-        valid_classes = class_counts[class_counts >= 50].index
+        valid_classes = class_counts[class_counts >= 100].index
 
         # Filter the dataset indices based on the valid classes
         filtered_dataset = [
@@ -81,3 +81,21 @@ class SymbolsDataset(Dataset):
             img1 = self.transform(img1)
 
         return img0, img1, label, class0, class1
+
+
+class TransformDataset(Dataset):
+    def __init__(self, subset, transform=None):
+        self.subset = subset
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.subset)
+
+    def __getitem__(self, idx):
+        img0, img1, label, class0, class1 = self.subset[idx]
+        if self.transform is not None:
+            img0 = self.transform(img0)
+            img1 = self.transform(img1)
+
+        return img0, img1, label, class0, class1
+

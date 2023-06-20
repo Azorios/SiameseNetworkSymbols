@@ -12,7 +12,7 @@ def testing(test_loader, model, device):
 
     model.eval()
 
-    for i in range(10):
+    for i in range(20):
         # Iterate over 10 images and test them with the first image (x0)
         _, x1, label, _, class1 = next(dataiter)
 
