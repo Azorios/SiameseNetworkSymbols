@@ -31,12 +31,6 @@ class SymbolsDataset(Dataset):
         filtered_dataset = [
             idx for idx, label in enumerate(self.data.iloc[:, -1]) if label in valid_classes
         ]
-        # Limit each class to have a maximum of 50 instances
-        # filtered_dataset = []
-        # for label in valid_classes:
-        #     instances = self.data[self.data.iloc[:, -1] == label]
-        #     sampled_instances = instances.sample(n=min(class_counts[label], 50))
-        #     filtered_dataset.extend(sampled_instances.index)
 
         return filtered_dataset
 

@@ -3,9 +3,10 @@
 
 import torch
 import torchvision
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from dataset import SymbolsDataset, TransformDataset
-from help_functions import imshow, resample
+from help_functions import imshow, resample, distribution, class_counts
 from network import SiameseNetwork
 from contrastive_loss import ContrastiveLoss
 from training import training
@@ -27,8 +28,7 @@ if __name__ == '__main__':
     transforms = {
         'general': transforms.Compose([
             transforms.Resize((100, 100)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.5], std=[0.5])
+            transforms.ToTensor()
         ]),
         'train': transforms.Compose([
             transforms.RandomApply([
@@ -42,25 +42,28 @@ if __name__ == '__main__':
 
     # get class labels of filtered dataset and show distribution
     class_labels = dataset.data.iloc[:, -1].values[dataset.filtered_dataset]
-    #distribution(class_labels)
+    distribution(class_labels)
 
     # split dataset into train, val and test set stratify = class_labels
     train_dataset, test_dataset = train_test_split(dataset, test_size=0.2, random_state=42)
-    #train_dataset, val_dataset = train_test_split(train_dataset, test_size=0.1, random_state=42)
+    #train_dataset, val_dataset = train_test_split(train_dataset, test_size=0.2, random_state=42)
 
     # undersample classes with more than 100 instances and oversample classes with less than 100  to reach 100 per class
     resampled_train_dataset = resample(train_dataset)
 
+    # rotate images in train dataset
     #train_dataset = TransformDataset(resampled_train_dataset, transform=transforms['train'])
     #test_dataset = TransformDataset(test_dataset)
 
     # load datasets
     train_loader = DataLoader(resampled_train_dataset, shuffle=True, num_workers=0, batch_size=64)
-    #val_loader = DataLoader(val_dataset, shuffle=True, num_workers=0, batch_size=32)
+    #val_loader = DataLoader(val_dataset, shuffle=True, num_workers=0, batch_size=64)
     test_loader = DataLoader(test_dataset, shuffle=True, num_workers=0, batch_size=1)
 
     print("Train Dataset: ")
-    #class_counts(train_loader)
+    class_counts(train_loader)
+    print("Test Dataset: ")
+    class_counts(test_loader)
 
     # extract one batch for visualisation
     vis_loader = DataLoader(train_dataset, shuffle=True, num_workers=0, batch_size=8)
@@ -78,23 +81,18 @@ if __name__ == '__main__':
     # model
     model = SiameseNetwork().to(device)
     try:
-        model.load_state_dict(torch.load("./output5/model.pth"))
+        model.load_state_dict(torch.load("output/model.pth"))
     except FileNotFoundError:
         pass
 
     # loss function and optimizer
     loss_fn = ContrastiveLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.0001)
+    optimizer = optim.Adam(model.parameters(), lr=0.00005)
+    #scheduler = ReduceLROnPlateau(optimizer, 'min', verbose=True)
 
     # train and save model
+    #_ = training(train_loader, val_loader, device, optimizer, model, loss_fn, scheduler)
     _ = training(train_loader, device, optimizer, model, loss_fn)
 
     # testing
     _ = testing(test_loader, model, device)
-
-
-
-#output: model von siamesenetwork
-#output2: vereinfachtes model von siamesenetwork
-#output3: vereinfachtes model von siamesenetwork
-#output4: gleich, aber mit normalize

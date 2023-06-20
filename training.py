@@ -1,5 +1,5 @@
 import torch
-from help_functions import show_plot_simple
+from help_functions import show_plot
 
 
 def training(train_loader, device, optimizer, model, loss_fn):
@@ -10,7 +10,7 @@ def training(train_loader, device, optimizer, model, loss_fn):
     model.train()
 
     # Iterate through the epochs
-    for epoch in range(1000):
+    for epoch in range(200):
 
         # Iterate over batches
         for i, (img0, img1, label, _, _) in enumerate(train_loader, 0):
@@ -40,7 +40,7 @@ def training(train_loader, device, optimizer, model, loss_fn):
             counter.append(iteration_number)
             loss_history.append(loss_contrastive.item())
 
-    torch.save(model.state_dict(), "./output5/model.pth")
-    show_plot_simple(counter, loss_history)
+    torch.save(model.state_dict(), "output/model.pth")
+    show_plot(counter, loss_history)
 
     return None

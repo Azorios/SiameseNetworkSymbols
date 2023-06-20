@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 import torchvision.utils
-
+import matplotlib.pyplot as plt
 from help_functions import imshow
 
 
@@ -24,5 +24,7 @@ def testing(test_loader, model, device):
         imshow(torchvision.utils.make_grid(concatenated),
                f'Class1: {class0[0]}\nClass2: {class1[0]}',
                f'Dissimilarity: {euclidean_distance.item():.2f}')
+
+        plt.savefig(f"./output/dissimilarity{i}.png")
 
     return None

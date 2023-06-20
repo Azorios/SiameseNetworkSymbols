@@ -44,27 +44,33 @@ def imshow(img, title, text=None):
     plt.show()
 
 
-def show_plot(train_iteration, val_iteration, train_loss, val_loss, best_loss):
-    plt.figure(figsize=(10, 5))
-
-    # Plot train loss
-    plt.subplot(1, 2, 1)
-    plt.plot(train_iteration, train_loss)
-    plt.xlabel('Iteration')
-    plt.ylabel('Train Loss')
-    plt.title('Train Loss')
-
-    # Plot validation loss
-    plt.subplot(1, 2, 2)
-    plt.plot(val_iteration, val_loss)
-    plt.xlabel('Iteration')
-    plt.ylabel('Validation Loss')
-    plt.title('Validation Loss')
-
-    plt.tight_layout()
-
-    plt.savefig(f"./output/loss_{best_loss}.png")
+def show_plot(iteration, loss):
+    plt.plot(iteration, loss)
+    plt.savefig(f"./output/loss_{loss[-1]}.png")
     plt.show()
+
+
+# def show_plot(train_iteration, val_iteration, train_loss, val_loss, best_loss):
+#     plt.figure(figsize=(10, 5))
+#
+#     # Plot train loss
+#     plt.subplot(1, 2, 1)
+#     plt.plot(train_iteration, train_loss)
+#     plt.xlabel('Iteration')
+#     plt.ylabel('Train Loss')
+#     plt.title('Train Loss')
+#
+#     # Plot validation loss
+#     plt.subplot(1, 2, 2)
+#     plt.plot(val_iteration, val_loss)
+#     plt.xlabel('Iteration')
+#     plt.ylabel('Validation Loss')
+#     plt.title('Validation Loss')
+#
+#     plt.tight_layout()
+#
+#     plt.savefig(f"./output5/loss_{best_loss}.png")
+#     plt.show()
 
 
 def save_best_loss(best_loss):
@@ -85,7 +91,7 @@ def load_best_loss():
 
 def show_plot_simple(iteration, loss):
     plt.plot(iteration, loss)
-    plt.savefig(f"./output5/loss_{loss[-1]}.png")
+    plt.savefig(f"./output/loss_{loss[-1]}.png")
     plt.show()
 
 
@@ -120,7 +126,7 @@ def resample(train_dataset):
     # Apply the pipeline to the training dataset and labels
     resampled_train_df, resampled_train_labels_df = pipeline.fit_resample(train_df, train_labels_df)
 
-    # Convert resampled_train_df back to a list of tuples
+    # Convert resampled_train_df back to list of tuples
     resampled_train_dataset = resampled_train_df.to_records(index=False).tolist()
 
     # Convert resampled_train_labels_df back to a list
