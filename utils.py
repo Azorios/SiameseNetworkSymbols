@@ -5,6 +5,50 @@ from collections import defaultdict
 from imblearn.pipeline import make_pipeline
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import RandomOverSampler
+import csv
+from itertools import combinations
+
+
+def imshow(img, text=None):
+    npimg = img.numpy()
+    plt.axis("off")
+    if text:
+        plt.text(75, 8, text, style='italic', fontweight='bold',
+                 bbox={'facecolor': 'white', 'alpha': 0.8, 'pad': 10})
+
+    plt.imshow(np.transpose(npimg, (1, 2, 0)))
+    plt.show()
+
+
+
+def process_data(data):
+    # Group images by class
+    class_to_images = defaultdict(list)
+    for image in data:
+        pixels = image[:-1]
+        class_label = image[-1]
+        class_to_images[class_label].append(pixels)
+
+    # Filter out classes with fewer than 7 instances
+    class_to_images = {class_label: images for class_label, images in class_to_images.items() if len(images) >= 7}
+
+    # Generate image pairs and labels
+    pairs = []
+    labels = []
+    for class_label, images in class_to_images.items():
+        # Pairs of images within the same class (label 0)
+        same_class_pairs = list(combinations(images, 2))
+        pairs.extend(same_class_pairs)
+        labels.extend([0]*len(same_class_pairs))
+
+        # Pairs of images from different classes (label 1)
+        for other_class_label, other_images in class_to_images.items():
+            if class_label != other_class_label:
+                diff_class_pairs = list(combinations(images + other_images, 2))
+                pairs.extend(diff_class_pairs)
+                labels.extend([1]*len(diff_class_pairs))
+
+    return pairs, labels
 
 
 def distribution(class_labels):
@@ -32,17 +76,17 @@ def class_counts(data_loader):
         print(f"Class Label: {label}, Count: {count}")
 
 
-def imshow(img, title, text=None, i=None):
-    npimg = img.numpy()
-    plt.axis("off")
-    plt.title(title)
-    if text:
-        plt.text(75, 8, text, style='italic', fontweight='bold',
-                 bbox={'facecolor': 'white', 'alpha': 0.8, 'pad': 10})
-
-    plt.imshow(np.transpose(npimg, (1, 2, 0)))
-    plt.savefig(f'output/dissimilarity{i}.png')
-    plt.show()
+# def imshow(img, title, text=None, i=None):
+#     npimg = img.numpy()
+#     plt.axis("off")
+#     plt.title(title)
+#     if text:
+#         plt.text(75, 8, text, style='italic', fontweight='bold',
+#                  bbox={'facecolor': 'white', 'alpha': 0.8, 'pad': 10})
+#
+#     plt.imshow(np.transpose(npimg, (1, 2, 0)))
+#     plt.savefig(f'output/dissimilarity{i}.png')
+#     plt.show()
 
 def show_plot(iteration, loss):
     plt.plot(iteration, loss)
