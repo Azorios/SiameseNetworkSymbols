@@ -19,11 +19,3 @@ class ContrastiveLoss(torch.nn.Module):
                                       label * torch.pow(torch.clamp(self.margin - euclidean_distance, min=0.0), 2))
 
         return loss_contrastive
-
-def contrastive_loss_with_margin(margin):
-    def contrastive_loss(y_true, y_pred):
-        square_pred = tf.math.square(y_pred)
-        margin_square = tf.math.square(tf.math.maximum(margin - y_pred, 0))
-        return tf.math.reduce_mean(y_true * square_pred + (1 - y_true) * margin_square)
-
-    return contrastive_loss
