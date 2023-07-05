@@ -9,7 +9,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from dataset import SymbolsDataset, TransformDataset, SiameseNetworkDataset
 from utils import resample, distribution, class_counts, imshow, process_data
 from network import SiameseNetwork
-from contrastive_loss import ContrastiveLoss, contrastive_loss_with_margin
+from contrastive_loss import ContrastiveLoss
 from training import training
 from testing import testing
 import torchvision.transforms as transforms

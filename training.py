@@ -11,7 +11,7 @@ def training(train_loader, device, optimizer, model, loss_fn):
     model.train()
 
     # Iterate through the epochs
-    for epoch in range(100):
+    for epoch in range(50):
 
         # Iterate over batches
         for i, (img0, img1, label) in enumerate(train_loader, 0):
